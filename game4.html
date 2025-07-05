@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📅 Mission Timeline</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000022;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .timeline-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .mission {
+      background: #1a1a3d;
+      border: 2px dashed #12c2e9;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: move;
+      user-select: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .mission.dragging {
+      opacity: 0.5;
+    }
+
+    #checkBtn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    #back {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: #12c2e9;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📅 Mission Timeline</h1>
+  <p>Arrange the missions in chronological order!</p>
+
+  <div class="timeline-container" id="timeline">
+    <!-- Missions will appear here -->
+  </div>
+
+  <button id="checkBtn" onclick="checkOrder()">✅ Check Order</button>
+  <div id="result"></div>
+
+  <button id="back" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    const missions = [
+      { name: "Sputnik 1 (1957)", year: 1957 },
+      { name: "Apollo 11 (1969)", year: 1969 },
+      { name: "Voyager 1 Launch (1977)", year: 1977 },
+      { name: "International Space Station Start (1998)", year: 1998 },
+      { name: "James Webb Launch (2021)", year: 2021 }
+    ];
+
+    let shuffled = [...missions].sort(() => Math.random() - 0.5);
+
+    const timeline = document.getElementById("timeline");
+
+    function renderMissions() {
+      timeline.innerHTML = "";
+      shuffled.forEach((mission, index) => {
+        const div = document.createElement("div");
+        div.className = "mission";
+        div.draggable = true;
+        div.dataset.index = index;
+        div.textContent = mission.name;
+
+        div.addEventListener("dragstart", () => {
+          div.classList.add("dragging");
+        });
+
+        div.addEventListener("dragend", () => {
+          div.classList.remove("dragging");
+        });
+
+        timeline.appendChild(div);
+      });
+    }
+
+    timeline.addEventListener("dragover", e => {
+      e.preventDefault();
+      const dragging = document.querySelector(".dragging");
+      const after = getDragAfterElement(timeline, e.clientX);
+      if (after == null) {
+        timeline.appendChild(dragging);
+      } else {
+        timeline.insertBefore(dragging, after);
+      }
+    });
+
+    function getDragAfterElement(container, x) {
+      const draggableElements = [...container.querySelectorAll(".mission:not(.dragging)")];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkOrder() {
+      const items = [...document.querySelectorAll(".mission")];
+      const currentOrder = items.map(item => item.textContent);
+      const correctOrder = missions.map(m => m.name);
+
+      if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+        document.getElementById("result").innerHTML = "🎉 Correct! You nailed the timeline!";
+        document.getElementById("result").style.color = "#7CFC00";
+      } else {
+        document.getElementById("result").innerHTML = "❌ Not quite! Try again!";
+        document.getElementById("result").style.color = "#FF6347";
+      }
+    }
+
+    renderMissions();
+  </script>
+
+</body>
+</html>

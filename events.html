@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cosmic Reveal - NASA APOD & Space History</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0b0b2e;
+      color: #bde4ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 5px #fff, 0 0 15px #0ff;
+      margin-bottom: 20px;
+    }
+
+    .date-picker {
+      margin-bottom: 20px;
+    }
+
+    input[type="date"], button {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+    }
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .details {
+      margin-top: 15px;
+      display: none;
+    }
+
+    .details img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .event {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #444;
+    }
+
+    #scientistImage {
+      max-width: 150px;
+      margin: 20px auto;
+      border-radius: 50%;
+      border: 3px solid #ffdd57;
+      animation: pulse 2s infinite ease-in-out;
+      display: block;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 10px #ffdd57;
+      }
+      50% {
+        box-shadow: 0 0 25px #0ff;
+      }
+    }
+
+    #readerControls {
+      margin-top: 20px;
+    }
+
+    #readerControls button {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #ffdd57;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #readerControls button.stop {
+      background-color: #ff4c4c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 Cosmic Reveal</h1>
+
+  <button onclick="location.href='index.html'" style="margin-bottom: 20px;">🏠 Home</button>
+
+  <p id="displayDate" style="font-size: 1.2rem; margin-bottom: 10px;"></p>
+
+  <div class="date-picker">
+    <input type="date" id="dateInput">
+    <button onclick="loadContent()">Load</button>
+  </div>
+
+  <div class="card" onclick="toggleSection('apodDetails')">
+    <h3 id="apodTitle">Click to reveal Astronomy Picture of the Day</h3>
+    <div id="apodDetails" class="details"></div>
+  </div>
+
+  <div class="card" onclick="toggleSection('eventDetails')">
+    <h3>Click to reveal Historical Space Events</h3>
+    <div id="eventDetails" class="details"></div>
+  </div>
+
+  <div id="scientistContainer" style="text-align:center; margin-top: 30px;">
+    <img id="scientistImage" src="" alt="Scientist Avatar">
+    <p style="font-size: 1.1rem;">Reader: <span id="scientistName">N/A</span></p>
+  </div>
+
+  <div id="readerControls">
+    <button onclick="readContent()">🔊 Read Content</button>
+    <button class="stop" onclick="stopReading()">⛔ Stop Reading</button>
+  </div>
+
+  <script>
+    const API_KEY = "DEMO_KEY"; // Replace with your NASA API key
+
+    function formatDate(date) {
+      return date.toISOString().split("T")[0];
+    }
+
+    function toggleSection(idToShow) {
+      const sections = ["apodDetails", "eventDetails"];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        el.style.display = id === idToShow
+          ? (el.style.display === "block" ? "none" : "block")
+          : "none";
+      });
+    }
+
+    function getScientistForYear(year) {
+      const scientists = [
+        { name: "Carl Sagan", year: 1980, img: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Carl_Sagan_Planetary_Society.jpg" },
+        { name: "Stephen Hawking", year: 1974, img: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Stephen_Hawking.StarChild.jpg" },
+        { name: "Katherine Johnson", year: 1969, img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Katherine_Johnson_1983.jpg" },
+        { name: "Neil deGrasse Tyson", year: 2000, img: "https://upload.wikimedia.org/wikipedia/commons/4/49/Neil_deGrasse_Tyson_in_June_2017.jpg" },
+        { name: "Mae Jemison", year: 1992, img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Mae_Jemison.jpg" },
+      ];
+
+      let match = scientists[0];
+      for (const sci of scientists) {
+        if (year >= sci.year) match = sci;
+      }
+      return match;
+    }
+
+    function loadContent() {
+      const inputDate = document.getElementById("dateInput").value;
+      const dateObj = inputDate ? new Date(inputDate) : new Date();
+      const dateStr = formatDate(dateObj);
+      document.getElementById("displayDate").textContent = `Showing for: ${dateStr}`;
+
+      fetch(`https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${dateStr}`)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById("apodTitle").textContent = `${data.title} (${dateStr})`;
+
+          const explanation = data.explanation || "";
+          const points = explanation.match(/[^.!?]+[.!?]/g) || [explanation];
+          const shortPoints = points.slice(0, 3).map(p => "• " + p.trim());
+
+          const funLines = [
+            "🌌 Even black holes need a nap sometimes.",
+            "👽 Aliens might be watching this too.",
+            "🌠 10/10 would stargaze again.",
+            "🪐 Sponsored by Saturn's rings (just kidding).",
+            "✨ This deserves a constellation award!"
+          ];
+          const randomFun = funLines[Math.floor(Math.random() * funLines.length)];
+
+          document.getElementById("apodDetails").innerHTML = `
+            ${data.media_type === 'image' ? `<img src="${data.url}" alt="APOD Image">` : ''}
+            <div style="margin-top: 15px; font-size: 1.05rem;">
+              ${shortPoints.join("<br><br>")}
+              <br><br><em>${randomFun}</em>
+            </div>
+          `;
+          document.getElementById("apodDetails").style.display = "none";
+        });
+
+      const m = dateObj.getMonth() + 1;
+      const d = dateObj.getDate();
+      fetch(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${m}/${d}`)
+        .then(r => r.json())
+        .then(data => {
+          const container = document.getElementById("eventDetails");
+          const events = data.events.filter(e =>
+            /space|nasa|cosmos|rocket|astronaut|planet|launch|eclipse|comet|satellite|moon|orbit/i.test(e.text)
+          );
+
+          if (events.length === 0) {
+            container.innerHTML = `<p>No space-related events found for this date.</p>`;
+          } else {
+            container.innerHTML = events.map((e) => {
+              const page = e.pages.find(p => p.thumbnail || p.originalimage);
+              const img = page?.thumbnail?.source || page?.originalimage?.source;
+              return `
+                <div class="event">
+                  <strong>${e.year}</strong>: ${e.text}
+                  ${img ? `<br><img src="${img}" alt="Event Image">` : ''}
+                </div>
+              `;
+            }).join("");
+
+            // Scientist update
+            const firstYear = events[0]?.year || 1980;
+            const scientist = getScientistForYear(firstYear);
+            document.getElementById("scientistName").textContent = scientist.name;
+            document.getElementById("scientistImage").src = scientist.img;
+          }
+
+          document.getElementById("eventDetails").style.display = "none";
+        });
+    }
+
+    function readContent() {
+      const apodDetails = document.getElementById("apodDetails").innerText;
+      const eventDetails = document.getElementById("eventDetails").innerText;
+      const contentToRead = `Astronomy Picture of the Day: ${apodDetails}. Historical Space Events: ${eventDetails}`;
+      const speech = new SpeechSynthesisUtterance(contentToRead);
+      speech.lang = 'en-US';
+      speech.rate = 1;
+      window.speechSynthesis.speak(speech);
+    }
+
+    function stopReading() {
+      window.speechSynthesis.cancel();
+    }
+
+    window.onload = loadContent;
+  </script>
+
+</body>
+</html>

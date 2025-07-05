@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧑‍🚀 Astronaut or Not?</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000016;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .name-box {
+      margin: 40px auto;
+      padding: 20px 40px;
+      background: #111;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      width: fit-content;
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    .btn {
+      margin: 15px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .yes { background-color: #7CFC00; color: #000; }
+    .no { background-color: #FF6347; color: #000; }
+
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #0ff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #back {
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: #12c2e9;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧑‍🚀 Astronaut or Not?</h1>
+  <p>Guess if the name below is a real astronaut or a made-up one!</p>
+
+  <div class="name-box" id="nameBox">Loading...</div>
+
+  <div>
+    <button class="btn yes" onclick="makeGuess(true)">🧑‍🚀 Astronaut</button>
+    <button class="btn no" onclick="makeGuess(false)">❌ Not</button>
+  </div>
+
+  <div id="feedback"></div>
+  <button id="nextBtn" onclick="nextName()">🔁 Next</button>
+  <button id="back" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    const names = [
+      { name: "Yuri Gagarin", isAstronaut: true },
+      { name: "Kalpana Chawla", isAstronaut: true },
+      { name: "Buzz Aldrin", isAstronaut: true },
+      { name: "Sally Ride", isAstronaut: true },
+      { name: "Neil Armstrong", isAstronaut: true },
+      { name: "Glen Orbitz", isAstronaut: false },
+      { name: "Zara Cosmica", isAstronaut: false },
+      { name: "Leo Shuttleman", isAstronaut: false },
+      { name: "Dax Lightyear", isAstronaut: false },
+      { name: "Tina Apollo", isAstronaut: false }
+    ];
+
+    let currentName;
+
+    function nextName() {
+      const index = Math.floor(Math.random() * names.length);
+      currentName = names[index];
+      document.getElementById("nameBox").textContent = currentName.name;
+      document.getElementById("feedback").textContent = "";
+    }
+
+    function makeGuess(isAstronautGuess) {
+      const result = isAstronautGuess === currentName.isAstronaut;
+      const feedback = document.getElementById("feedback");
+      if (result) {
+        feedback.textContent = "✅ Correct!";
+        feedback.style.color = "#7CFC00";
+      } else {
+        feedback.textContent = "❌ Nope! That's wrong.";
+        feedback.style.color = "#FF6347";
+      }
+    }
+
+    window.onload = nextName;
+  </script>
+</body>
+</html>

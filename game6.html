@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛰️ Satellite Scan</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #000014;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #00f2fe;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .satellite, .target {
+      padding: 12px 20px;
+      border-radius: 10px;
+      width: 200px;
+      text-align: center;
+      font-weight: bold;
+      cursor: grab;
+    }
+
+    .satellite {
+      background-color: #1a1a3d;
+      border: 2px dashed #12c2e9;
+    }
+
+    .target {
+      background-color: #333;
+      border: 2px solid #444;
+      min-height: 60px;
+    }
+
+    .target.correct {
+      border-color: #7CFC00;
+      background-color: #112;
+    }
+
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #0ff;
+      color: #000;
+      border: none;
+    }
+
+    #back {
+      margin-top: 20px;
+      background-color: #12c2e9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛰️ Satellite Scan</h1>
+  <p>Drag each satellite to its correct observation target!</p>
+
+  <div class="container">
+    <div class="satellite" draggable="true" id="Hubble">🔭 Hubble</div>
+    <div class="satellite" draggable="true" id="Landsat">🌍 Landsat</div>
+    <div class="satellite" draggable="true" id="GOES">☁️ GOES</div>
+    <div class="satellite" draggable="true" id="SOHO">☀️ SOHO</div>
+  </div>
+
+  <div class="container">
+    <div class="target" data-sat="Hubble" ondrop="drop(event)" ondragover="allowDrop(event)">Observes galaxies</div>
+    <div class="target" data-sat="Landsat" ondrop="drop(event)" ondragover="allowDrop(event)">Observes Earth surface</div>
+    <div class="target" data-sat="GOES" ondrop="drop(event)" ondragover="allowDrop(event)">Observes weather</div>
+    <div class="target" data-sat="SOHO" ondrop="drop(event)" ondragover="allowDrop(event)">Observes the Sun</div>
+  </div>
+
+  <div id="feedback"></div>
+  <button onclick="checkMatches()">✅ Check Answers</button>
+  <button id="back" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    let draggedId = "";
+
+    document.querySelectorAll('.satellite').forEach(sat => {
+      sat.addEventListener("dragstart", e => {
+        draggedId = e.target.id;
+      });
+    });
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      if (ev.target.classList.contains("target")) {
+        ev.target.innerHTML = document.getElementById(draggedId).outerHTML;
+        document.getElementById(draggedId).style.display = "none";
+      }
+    }
+
+    function checkMatches() {
+      let correct = 0;
+      document.querySelectorAll('.target').forEach(target => {
+        const droppedId = target.querySelector('.satellite')?.id;
+        if (droppedId === target.dataset.sat) {
+          target.classList.add("correct");
+          correct++;
+        } else {
+          target.classList.remove("correct");
+        }
+      });
+
+      const feedback = document.getElementById("feedback");
+      if (correct === 4) {
+        feedback.innerHTML = "🎉 Perfect! You matched all satellites correctly!";
+        feedback.style.color = "#7CFC00";
+      } else {
+        feedback.innerHTML = `✅ ${correct}/4 correct. Keep scanning!`;
+        feedback.style.color = "#FF6347";
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌍 Planet Match-Up</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .column {
+      width: 45%;
+      margin: 10px;
+    }
+
+    .item, .target {
+      background: #1a1a3d;
+      padding: 12px;
+      margin: 10px;
+      border-radius: 10px;
+      cursor: grab;
+      border: 2px dashed #12c2e9;
+      transition: 0.3s;
+    }
+
+    .item:hover {
+      background: #333366;
+    }
+
+    .matched {
+      background: #12c2e9;
+      color: #000;
+      border: 2px solid #0ff;
+      cursor: default;
+    }
+
+    button#back {
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌍 Planet Match-Up</h1>
+  <p>Drag the planets to their correct facts!</p>
+
+  <div class="container">
+    <div class="column" id="planetList">
+      <!-- Draggable items -->
+    </div>
+    <div class="column" id="factList">
+      <!-- Drop targets -->
+    </div>
+  </div>
+
+  <button id="back" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    const pairs = [
+      { planet: "Jupiter", fact: "Has the Great Red Spot" },
+      { planet: "Saturn", fact: "Has the most prominent rings" },
+      { planet: "Mars", fact: "Home to the tallest volcano in the Solar System" },
+      { planet: "Earth", fact: "Only planet known to support life" },
+      { planet: "Neptune", fact: "Farthest planet from the Sun" }
+    ];
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function renderGame() {
+      const planetList = document.getElementById("planetList");
+      const factList = document.getElementById("factList");
+      const shuffledFacts = shuffle([...pairs]);
+
+      pairs.forEach(pair => {
+        const item = document.createElement("div");
+        item.className = "item";
+        item.textContent = pair.planet;
+        item.draggable = true;
+        item.id = `drag-${pair.planet}`;
+        item.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("text/plain", pair.planet);
+        });
+        planetList.appendChild(item);
+      });
+
+      shuffledFacts.forEach(pair => {
+        const target = document.createElement("div");
+        target.className = "target";
+        target.textContent = pair.fact;
+        target.dataset.answer = pair.planet;
+
+        target.addEventListener("dragover", e => e.preventDefault());
+
+        target.addEventListener("drop", e => {
+          const dragged = e.dataTransfer.getData("text/plain");
+          if (dragged === target.dataset.answer) {
+            target.textContent = `${target.textContent} ✅`;
+            target.classList.add("matched");
+            const draggedEl = document.getElementById(`drag-${dragged}`);
+            draggedEl.classList.add("matched");
+            draggedEl.draggable = false;
+          } else {
+            alert("❌ Incorrect match. Try again!");
+          }
+        });
+
+        factList.appendChild(target);
+      });
+    }
+
+    window.onload = renderGame;
+  </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧠 Space Trivia Quiz</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .quiz-box {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .option {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 80%;
+      background: #12c2e9;
+      border: none;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background: #0ff;
+    }
+
+    #score {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    button#home-btn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Space Trivia Quiz</h1>
+
+  <div class="quiz-box">
+    <div id="questionBox">
+      <div class="question" id="question">Loading question...</div>
+      <div id="options"></div>
+    </div>
+    <div id="score" style="display:none;"></div>
+  </div>
+
+  <button id="home-btn" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    const quizData = [
+      {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Venus", "Mars", "Jupiter", "Mercury"],
+        answer: "Mars"
+      },
+      {
+        question: "What is the name of the first satellite sent into space?",
+        options: ["Apollo", "Sputnik", "Voyager", "Explorer"],
+        answer: "Sputnik"
+      },
+      {
+        question: "Which planet has the most moons?",
+        options: ["Jupiter", "Saturn", "Mars", "Uranus"],
+        answer: "Saturn"
+      },
+      {
+        question: "How long does it take for light from the Sun to reach Earth?",
+        options: ["1 second", "8 minutes", "1 hour", "24 hours"],
+        answer: "8 minutes"
+      },
+      {
+        question: "Which NASA mission first landed humans on the Moon?",
+        options: ["Apollo 11", "Apollo 13", "Gemini 5", "Mercury 7"],
+        answer: "Apollo 11"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      document.getElementById("question").textContent = q.question;
+      const optionsBox = document.getElementById("options");
+      optionsBox.innerHTML = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.onclick = () => checkAnswer(opt);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentQuestion].answer;
+      if (selected === correct) score++;
+
+      currentQuestion++;
+
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      document.getElementById("questionBox").style.display = "none";
+      const scoreBox = document.getElementById("score");
+      scoreBox.style.display = "block";
+      scoreBox.innerHTML = `✅ You scored <strong>${score}</strong> out of <strong>${quizData.length}</strong>!`;
+    }
+
+    // Start quiz
+    loadQuestion();
+  </script>
+
+</body>
+</html>

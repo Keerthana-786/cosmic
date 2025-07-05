@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cosmic Fact of the Day</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      color: #a0d8ff;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    video#bg-video {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 34, 0.6);
+      z-index: -1;
+    }
+
+    h1 {
+      color: #ffcc00;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ffd;
+    }
+
+    .fact-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 700px;
+      font-size: 1.2rem;
+      box-shadow: 0 0 15px #33aaff;
+      user-select: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      background: #ffcc00;
+      border: none;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background video -->
+  <video autoplay muted loop playsinline id="bg-video">
+    <source id="video-source" src="" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="overlay"></div>
+
+  <h1>🚀 Cosmic Fact of the Day</h1>
+  <div class="fact-box" id="factDisplay">Loading fact...</div>
+  <button onclick="location.reload()">🔁 Show Another Fact</button>
+
+  <script>
+    const facts = [
+      { text: "Space is completely silent — there is no atmosphere in space to carry sound.", video: "1.mp4" },
+      { text: "A day on Venus is longer than its year — it rotates very slowly on its axis.", video: "2.mp4" },
+      { text: "Neutron stars are so dense that a teaspoon would weigh about 6 billion tons.", video: "3.mp4" },
+      { text: "More energy from the Sun hits Earth every hour than the world uses in a year.", video: "4.mp4" },
+      { text: "The footprints on the Moon will likely stay there for millions of years due to no wind.", video: "5.mp4" },
+      { text: "Jupiter's Great Red Spot is a giant storm that has lasted over 350 years.", video:"6.mp4" },
+      { text: "There may be a giant planet called Planet Nine far beyond Pluto.", video:"7.mp4" },
+      { text: "Space begins at 100 km above sea level — not as far as you might think!", video: "8.mp4" },
+      { text: "If two pieces of the same metal touch in space, they bond permanently.", video: "9.mp4" },
+      { text: "Olympus Mons on Mars is the tallest volcano in the solar system — 3x taller than Everest.", video: "10.mp4" },
+      { text: "Saturn's rings are mostly ice and rock, but are incredibly thin.", video: "11.mp4" },
+      { text: "Black holes warp time and space — they're not just cosmic vacuums.", video: "12.mp4" },
+      { text: "The Boomerang Nebula is the coldest known place in the universe at -272°C.", video: "13.mp4" },
+      { text: "There are more trees on Earth than stars in the Milky Way.", video: "14.mp4" },
+      { text: "Valentina Tereshkova was the first woman in space — in 1963.", video: "15.mp4" },
+      { text: "Comet tails can stretch for millions of miles.", video: "16.mp4" }
+    ];
+
+    function showFactWithVideo() {
+      const factDisplay = document.getElementById('factDisplay');
+      const videoSource = document.getElementById('video-source');
+      const videoElement = document.getElementById('bg-video');
+
+      const randomIndex = Math.floor(Math.random() * facts.length);
+      const selected = facts[randomIndex];
+
+      factDisplay.textContent = selected.text;
+      videoSource.src = selected.video;
+      videoElement.load(); // Load new video source
+    }
+
+    window.onload = showFactWithVideo;
+  </script>
+
+</body>
+</html>

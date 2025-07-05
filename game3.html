@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>✔️ True or False: Space Edition</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #00f2fe;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .card {
+      background: #111132;
+      padding: 30px;
+      border-radius: 12px;
+      margin: 30px auto;
+      max-width: 600px;
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    .statement {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .true { background: #7CFC00; color: #000; }
+    .false { background: #FF6347; color: #000; }
+    .btn:hover { opacity: 0.9; }
+
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    #scoreBox {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    button#back {
+      margin-top: 30px;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✔️ True or False: Space Edition</h1>
+
+  <div class="card">
+    <div class="statement" id="statement">Loading...</div>
+    <button class="btn true" onclick="checkAnswer(true)">True ✅</button>
+    <button class="btn false" onclick="checkAnswer(false)">False ❌</button>
+    <div id="feedback"></div>
+    <div id="scoreBox"></div>
+  </div>
+
+  <button id="back" onclick="location.href='game.html'">🔙 Back to Game Menu</button>
+
+  <script>
+    const questions = [
+      { text: "The Moon has no gravity.", answer: false },
+      { text: "A day on Venus is longer than a year on Venus.", answer: true },
+      { text: "Jupiter is the smallest planet in our solar system.", answer: false },
+      { text: "There are more stars in the universe than grains of sand on Earth.", answer: true },
+      { text: "Humans have walked on Mars.", answer: false },
+      { text: "Neptune has rings.", answer: true },
+      { text: "The Sun is a planet.", answer: false },
+      { text: "Saturn can float in water.", answer: true }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      document.getElementById("statement").textContent = questions[current].text;
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("scoreBox").textContent = `Score: ${score}/${questions.length}`;
+    }
+
+    function checkAnswer(userAnswer) {
+      const correct = questions[current].answer;
+      const feedback = document.getElementById("feedback");
+
+      if (userAnswer === correct) {
+        score++;
+        feedback.textContent = "✅ Correct!";
+        feedback.style.color = "#7CFC00";
+      } else {
+        feedback.textContent = "❌ Incorrect.";
+        feedback.style.color = "#FF6347";
+      }
+
+      current++;
+      setTimeout(() => {
+        if (current < questions.length) {
+          loadQuestion();
+        } else {
+          document.getElementById("statement").textContent = "🎉 Quiz Completed!";
+          document.getElementById("feedback").textContent = `Final Score: ${score}/${questions.length}`;
+        }
+      }, 1000);
+    }
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>

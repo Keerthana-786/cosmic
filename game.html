@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cosmic Games Hub</title>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to right, #000428, #004e92);
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #ffdd57;
+      text-shadow: 0 0 8px #0ff;
+      margin-bottom: 40px;
+    }
+
+    .game-button {
+      display: block;
+      width: 80%;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .quiz     { background: #ffdd57; }
+    .match    { background: #12c2e9; }
+    .truefalse{ background: #00f2fe; }
+    .timeline { background: #a18cd1; }
+    .astro    { background: #fbc2eb; }
+    .sim      { background: #f6d365; }
+
+    .game-button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎮 Cosmic Game Zone</h1>
+
+  <button class="game-button quiz" onclick="location.href='game1.html'">🧠 Space Trivia Quiz</button>
+  <button class="game-button match" onclick="location.href='game2.html'">🌍 Planet Match-Up</button>
+  <button class="game-button truefalse" onclick="location.href='game3.html'">✔️ True or False: Space Edition</button>
+  <button class="game-button timeline" onclick="location.href='game4.html'">📅 Mission Timeline</button>
+  <button class="game-button astro" onclick="location.href='game5.html'">🧑‍🚀 Astronaut or Not?</button>
+  <button class="game-button sim" onclick="location.href='game6.html'">🛰️ Space Explorer Simulator</button>
+
+  <br><br>
+  <button onclick="location.href='index.html'" style="padding: 10px 20px; border-radius: 8px; background: #0ff; color: #000; font-weight: bold;">🏠 Back to Home</button>
+
+</body>
+</html>
