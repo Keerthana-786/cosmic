@@ -1,3 +1,4 @@
+<!-- 👇 Replace your previous code with this updated version -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,24 +66,6 @@
       border-top: 1px solid #444;
     }
 
-    #scientistImage {
-      max-width: 150px;
-      margin: 20px auto;
-      border-radius: 50%;
-      border: 3px solid #ffdd57;
-      animation: pulse 2s infinite ease-in-out;
-      display: block;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        box-shadow: 0 0 10px #ffdd57;
-      }
-      50% {
-        box-shadow: 0 0 25px #0ff;
-      }
-    }
-
     #readerControls {
       margin-top: 20px;
     }
@@ -126,11 +109,6 @@
     <div id="eventDetails" class="details"></div>
   </div>
 
-  <div id="scientistContainer" style="text-align:center; margin-top: 30px;">
-    <img id="scientistImage" src="" alt="Scientist Avatar">
-    <p style="font-size: 1.1rem;">Reader: <span id="scientistName">N/A</span></p>
-  </div>
-
   <div id="readerControls">
     <button onclick="readContent()">🔊 Read Content</button>
     <button class="stop" onclick="stopReading()">⛔ Stop Reading</button>
@@ -151,22 +129,6 @@
           ? (el.style.display === "block" ? "none" : "block")
           : "none";
       });
-    }
-
-    function getScientistForYear(year) {
-      const scientists = [
-        { name: "Carl Sagan", year: 1980, img: "https://upload.wikimedia.org/wikipedia/commons/e/e5/Carl_Sagan_Planetary_Society.jpg" },
-        { name: "Stephen Hawking", year: 1974, img: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Stephen_Hawking.StarChild.jpg" },
-        { name: "Katherine Johnson", year: 1969, img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Katherine_Johnson_1983.jpg" },
-        { name: "Neil deGrasse Tyson", year: 2000, img: "https://upload.wikimedia.org/wikipedia/commons/4/49/Neil_deGrasse_Tyson_in_June_2017.jpg" },
-        { name: "Mae Jemison", year: 1992, img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Mae_Jemison.jpg" },
-      ];
-
-      let match = scientists[0];
-      for (const sci of scientists) {
-        if (year >= sci.year) match = sci;
-      }
-      return match;
     }
 
     function loadContent() {
@@ -226,12 +188,6 @@
                 </div>
               `;
             }).join("");
-
-            // Scientist update
-            const firstYear = events[0]?.year || 1980;
-            const scientist = getScientistForYear(firstYear);
-            document.getElementById("scientistName").textContent = scientist.name;
-            document.getElementById("scientistImage").src = scientist.img;
           }
 
           document.getElementById("eventDetails").style.display = "none";
